@@ -6,14 +6,25 @@ import nodemailer from 'nodemailer';
  * SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS
  */
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    requireTLS: true,
     auth: {
         user: 'milankumar7770@gmail.com',
         pass: 'uprxxuzkxyaylhfy',
     },
-    connectionTimeout: 10000,
+    tls: {
+        rejectUnauthorized: false,
+    },
 });
-
+transporter.verify((error, success) => {
+    if (error) {
+        console.log('SMTP ERROR:', error);
+    } else {
+        console.log('SMTP SERVER READY');
+    }
+});
 // Extra logging to confirm config (without password)
 console.log('SMTP config in use:', {
     service: 'gmail',

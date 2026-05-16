@@ -1,5 +1,7 @@
-import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+dotenv.config();
 
+import nodemailer from 'nodemailer';
 /**
  * Nodemailer transporter using SMTP2GO
  * Make sure these are set in your .env:

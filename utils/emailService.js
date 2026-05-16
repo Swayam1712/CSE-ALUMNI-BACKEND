@@ -6,25 +6,17 @@ import nodemailer from 'nodemailer';
  * SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS
  */
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.zoho.in',
-    port: Number(process.env.SMTP_PORT) || 465,
-    secure:
-        process.env.SMTP_SECURE === 'true' ||
-        Number(process.env.SMTP_PORT) === 465, // true only for 465
+    service: 'gmail',
     auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: 'milankumar7770@gmail.com',
+        pass: 'uprxxuzkxyaylhfy',
     },
 });
 
 // Extra logging to confirm config (without password)
 console.log('SMTP config in use:', {
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure:
-        process.env.SMTP_SECURE === 'true' ||
-        Number(process.env.SMTP_PORT) === 465,
-    user: process.env.SMTP_USER,
+    service: 'gmail',
+user: 'milankumar7770@gmail.com',
 });
 
 // Optional: verify connection on server start

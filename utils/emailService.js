@@ -6,16 +6,12 @@ import nodemailer from 'nodemailer';
  * SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS
  */
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT),
     secure: false,
-    requireTLS: true,
     auth: {
-        user: 'milankumar7770@gmail.com',
-        pass: 'uprxxuzkxyaylhfy',
-    },
-    tls: {
-        rejectUnauthorized: false,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
     },
 });
 transporter.verify((error, success) => {
@@ -27,8 +23,9 @@ transporter.verify((error, success) => {
 });
 // Extra logging to confirm config (without password)
 console.log('SMTP config in use:', {
-    service: 'gmail',
-user: 'milankumar7770@gmail.com',
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    user: process.env.SMTP_USER,
 });
 /**
  * Generic helper to send any email

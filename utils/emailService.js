@@ -7,7 +7,7 @@ import nodemailer from 'nodemailer';
  */
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.zoho.in',
-    port: Number(process.env.SMTP_PORT) || 587,
+    port: Number(process.env.SMTP_PORT) || 465,
     secure:
         process.env.SMTP_SECURE === 'true' ||
         Number(process.env.SMTP_PORT) === 465, // true only for 465
@@ -42,7 +42,7 @@ transporter.verify((err, success) => {
  */
 export const sendEmail = async ({ to, subject, html, text, attachments, from }) => {
     const mailOptions = {
-        from: from || process.env.EMAIL_FROM || 'CSE Alumni <cse@igitalumni.in>',
+        from: process.env.EMAIL_FROM || 'CSE Alumni <cse@igitalumni.in>',
         to,
         subject,
         text,

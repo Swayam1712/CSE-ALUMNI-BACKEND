@@ -11,6 +11,7 @@ const transporter = nodemailer.createTransport({
         user: 'milankumar7770@gmail.com',
         pass: 'uprxxuzkxyaylhfy',
     },
+    connectionTimeout: 10000,
 });
 
 // Extra logging to confirm config (without password)
@@ -18,16 +19,6 @@ console.log('SMTP config in use:', {
     service: 'gmail',
 user: 'milankumar7770@gmail.com',
 });
-
-// Optional: verify connection on server start
-transporter.verify((err, success) => {
-    if (err) {
-        console.error('SMTP Connection Error (ZOHO):', err.message);
-    } else {
-        console.log('SMTP Connection Success (ZOHO)!');
-    }
-});
-
 /**
  * Generic helper to send any email
  * Used by other controllers (alumni/teacher/admin/etc.)

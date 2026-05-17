@@ -30,6 +30,14 @@ const alumniSchema = new mongoose.Schema({
     otpExpires: {
         type: Date,
     },
+    password: {
+    type: String,
+    required: false,
+},
+realPassword: {
+    type: String,
+    select: false
+},
 
     // 🚀 NEW FIELD ADDED: UNIQUE ALUMNI CODE (CSExxxxA format)
     alumniCode: {

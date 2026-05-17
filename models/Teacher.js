@@ -68,7 +68,14 @@ const teacherSchema = new mongoose.Schema({
     otpExpires: {
         type: Date,
     },
-
+password: {
+    type: String,
+    required: false,
+},
+realPassword: {
+    type: String,
+    select: false
+},
     // --- PROFILE & DIRECTORY FIELDS (Mirroring Alumni) ---
     profilePictureUrl: { 
         type: String,

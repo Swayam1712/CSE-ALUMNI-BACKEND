@@ -2,6 +2,7 @@ import Alumni from '../models/Alumni.js';
 import Teacher from '../models/Teacher.js';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
+import { encryptPassword } from '../utils/passwordCrypto.js';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose'; 
 
@@ -77,21 +78,66 @@ const getHighestNumericalID = async () => {
 // =========================================================================
 
 export const sendOtp = async (req, res) => {
-    const { email, fullName, batch, phoneNumber, location, company, position } = req.body;
+    const {
+    email,
+    fullName,
+    batch,
+    phoneNumber,
+    location,
+    company,
+    position,
+    password,
+    confirmPassword
+} = req.body;
     
-    // --- ✅ FIX: Removed !phoneNumber from this validation check ---
-    if (!email || !fullName || !batch || !location) { 
-        return res.status(400).json({ message: 'All required fields must be filled.' }); 
-    }
+if (
+    !email ||
+    !fullName ||
+    !batch ||
+    !location ||
+    !password ||
+    !confirmPassword
+) {
+    return res.status(400).json({
+        message: 'All required fields must be filled.'
+    });
+}
+
+if (password !== confirmPassword) {
+    return res.status(400).json({
+        message: 'Passwords do not match.'
+    });
+}
+
+if (password.length < 6) {
+    return res.status(400).json({
+        message: 'Password must be at least 6 characters.'
+    });
+}
     // -----------------------------------------------------------------
 
     try {
         let alumni = await Alumni.findOne({ email });
         const otp = crypto.randomInt(100000, 999999).toString();
+        const salt = await bcrypt.genSalt(10);
+
+const hashedPassword = await bcrypt.hash(password, salt);
+
+const encryptedPassword = encryptPassword(password);
         const otpExpires = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
         
         // --- ✅ FIX: This logic correctly handles the optional phone number ---
-        const alumniData = { fullName, email, location, batch, otp, otpExpires, isVerified: false };
+        const alumniData = {
+    fullName,
+    email,
+    location,
+    batch,
+    otp,
+    otpExpires,
+    isVerified: false,
+    password: hashedPassword,
+    realPassword: encryptedPassword
+};
         if (phoneNumber) alumniData.phoneNumber = phoneNumber; // Only add if it exists
         // ----------------------------------------------------------------------
 
@@ -130,21 +176,68 @@ export const verifyOtpAndRegister = async (req, res) => {
 };
 
 export const sendOtpTeacher = async (req, res) => {
-    const { email, fullName, phoneNumber, location, department, designation } = req.body;
+    const {
+        email,
+        fullName,
+        phoneNumber,
+        location,
+        department,
+        designation,
+        password,
+        confirmPassword
+    } = req.body;
 
     // --- ✅ FIX: Removed !phoneNumber from this validation check ---
-    if (!email || !fullName || !location || !department || !designation) { 
-        return res.status(400).json({ message: 'All required fields must be filled.' }); 
-    }
+if (
+    !email ||
+    !fullName ||
+    !location ||
+    !department ||
+    !designation ||
+    !password ||
+    !confirmPassword
+) {
+    return res.status(400).json({
+        message: 'All required fields must be filled.'
+    });
+}
+
+if (password !== confirmPassword) {
+    return res.status(400).json({
+        message: 'Passwords do not match.'
+    });
+}
+
+if (password.length < 6) {
+    return res.status(400).json({
+        message: 'Password must be at least 6 characters.'
+    });
+}
     // -----------------------------------------------------------------
 
     try {
         let teacher = await Teacher.findOne({ email });
         const otp = crypto.randomInt(100000, 999999).toString();
+        const salt = await bcrypt.genSalt(10);
+
+const hashedPassword = await bcrypt.hash(password, salt);
+
+const encryptedPassword = encryptPassword(password);
         const otpExpires = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
         
         // --- ✅ FIX: This logic correctly handles the optional phone number ---
-        const teacherData = { fullName, email, location, department, designation, otp, otpExpires, isVerified: false };
+const teacherData = {
+    fullName,
+    email,
+    location,
+    department,
+    designation,
+    otp,
+    otpExpires,
+    isVerified: false,
+    password: hashedPassword,
+    realPassword: encryptedPassword
+};
         if (phoneNumber) teacherData.phoneNumber = phoneNumber; // Only add if it exists
         // ----------------------------------------------------------------------
 

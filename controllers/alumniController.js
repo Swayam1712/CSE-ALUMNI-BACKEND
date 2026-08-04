@@ -8,10 +8,17 @@ import { sendEmail } from '../utils/emailService.js'; // uses our SMTP (SMTP2GO)
  */
 export const getAlumni = async (req, res) => {
     try {
-        const alumni = await Alumni.find({}).sort({ createdAt: -1 });
-        res.status(200).json(alumni);
+        const alumni = await Alumni.find(
+            {},
+            'id name email location isVerified achievements linkedinUrl achievementPhotos'
+        ).sort({ createdAt: -1 });
+
+        return res.status(200).json(alumni);
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching alumni', error: error.message });
+        return res.status(500).json({ 
+            message: 'Error fetching alumni', 
+            error: error.message 
+        });
     }
 };
 

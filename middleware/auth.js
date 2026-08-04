@@ -14,18 +14,16 @@ import jwt from 'jsonwebtoken';
 // --- CONSISTENT SECRET DEFINITION (THE FIX) ---
 // Define a single, consistent secret. Make sure this exact string 
 // is used by your login route to SIGN the tokens.
-const FALLBACK_SECRET = 'a8f5b1e3d7c2a4b6e8d9f0a1b3c5d7e9f2a4b6c8d0e1f3a5b7c9d1e3f5a7b9c1';
-
 const getSecret = () => {
-    // Priority: 1. Environment Variable, 2. Hardcoded Fallback
     const secret = process.env.JWT_SECRET;
     
-    // IMPORTANT: Log the secret being used on the deployed server for debugging
-    console.log(`Using JWT Secret: ${secret.substring(0, 5)}...`); 
-
-    if (secret === FALLBACK_SECRET) {
-        console.warn("⚠️ JWT_SECRET is not set in ENV. Using fallback secret for verification.");
+    // If there is no secret in the environment variables, CRASH THE APP.
+    // This prevents the server from ever running in an insecure state.
+    if (!secret) {
+        console.error("🚨 FATAL ERROR: JWT_SECRET is not set in environment variables!");
+        process.exit(1); 
     }
+    
     return secret;
 }
 

@@ -2,15 +2,16 @@ import express from 'express';
 import RegistrationPayment from '../models/RegistrationPayment.js';
 import Event from '../models/Event.js';
 // 💡 CRITICAL FIX: Import controllers from authController.js
-import { 
-    adminRegister, 
-    adminLogin, 
-    handleGetAllUsers, 
-    handleUpdateUserRole, 
-    handleGetAllPendingAdmins, 
-    handleApproveAdmin, 
-    handleRejectAdmin 
-} from '../controllers/authController.js'; // <-- CORRECTED PATH
+import {
+    adminRegister,
+    adminLogin,
+    getAdminProfile,
+    handleGetAllUsers,
+    handleUpdateUserRole,
+    handleGetAllPendingAdmins,
+    handleApproveAdmin,
+    handleRejectAdmin
+} from '../controllers/authController.js';
 
 // Import Auth Middleware
 import auth, { isAdmin, isSuperAdmin } from '../middleware/auth.js'; 
@@ -34,6 +35,7 @@ router.post('/register', adminRegister);
  * @access Public
  */
 router.post('/login', adminLogin);
+router.get('/me', auth, getAdminProfile);
 
 // =========================================================
 // 2. PENDING ADMIN MANAGEMENT (Super Admin Only)

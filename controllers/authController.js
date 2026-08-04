@@ -448,7 +448,24 @@ export const adminLogin = async (req, res) => {
     }
 };
 
+export const getAdminProfile = async (req, res) => {
+    try {
+        const user = await findUserById(req.user._id);
 
+        if (!user) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
+
+        res.json({
+            id: user._id,
+            username: user.username || user.email,
+            role: user.role,
+            isApproved: user.isVerified
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Server Error" });
+    }
+};
 // =========================================================================
 // 4. SUPER ADMIN MANAGEMENT HANDLERS
 // =========================================================================

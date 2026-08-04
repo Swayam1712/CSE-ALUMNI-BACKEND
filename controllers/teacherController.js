@@ -9,13 +9,15 @@ const SUPER_ADMIN_EMAIL = 'milankumar7770@gmail.com';
  * @access  Private (Requires auth)
  */
 export const getTeachers = async (req, res) => {
-    // ... (Your getTeachers logic is unchanged) ...
     try {
-        const teachers = await Teacher.find({}).sort({ fullName: 1 });
+        // 🛑 ONLY return these safe fields for teachers. Passwords and sensitive data are hidden!
+        const teachers = await Teacher.find({})
+            .select('fullName branch department location profilePicture achievements')
+            .sort({ createdAt: -1 });
+            
         res.status(200).json(teachers);
     } catch (error) {
-        console.error('Error fetching teachers:', error);
-        res.status(500).json({ message: 'Error fetching teacher profiles.', error: error.message });
+        res.status(500).json({ message: 'Error fetching teachers', error: error.message });
     }
 };
 

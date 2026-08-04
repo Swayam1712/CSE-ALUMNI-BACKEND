@@ -10,7 +10,7 @@ export const getAlumni = async (req, res) => {
     try {
         const alumni = await Alumni.find(
             {},
-            'id name email location isVerified achievements linkedinUrl achievementPhotos batch passingYear company designation profilePictureUrl'
+            'id name email location isVerified achievements linkedinUrl achievementPhotos batch passingYear company designation'
         ).sort({ createdAt: -1 });
 
         return res.status(200).json(alumni);

@@ -8,12 +8,17 @@ import { sendEmail } from '../utils/emailService.js'; // uses our SMTP (SMTP2GO)
  */
 export const getAlumni = async (req, res) => {
     try {
-        // 🛑 ONLY return these safe fields. Everything else (password, phone, etc.) is hidden!
-        const alumni = await Alumni.find({})
-            .select('fullName batch branch location profilePicture achievements')
-            .sort({ createdAt: -1 });
-            
-        res.status(200).json(alumni);
+        const alumni = await Alumni.find({}).sort({ createdAt: -1 });
+
+        const sanitizedAlumni = alumni.map(person => ({
+            name: person.fullName,
+            batch: person.batch,
+            location: person.location,
+            achievements: person.achievements,
+            profilePicture: person.profilePicture,
+        }));
+
+        res.status(200).json(sanitizedAlumni);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching alumni', error: error.message });
     }

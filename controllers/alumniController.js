@@ -8,6 +8,7 @@ import { sendEmail } from '../utils/emailService.js'; // uses our SMTP (SMTP2GO)
  */
 export const getAlumni = async (req, res) => {
     try {
+        // Only select the allowed fields. Everything else is hidden from the network response.
         const alumni = await Alumni.find(
             {},
             'id name email location isVerified achievements linkedinUrl achievementPhotos'

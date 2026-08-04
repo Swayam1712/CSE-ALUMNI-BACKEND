@@ -314,8 +314,17 @@ export const loginOtpVerify = async (req, res) => {
         if (!user.isVerified) { return res.status(403).json({ message: 'Access Denied. Your account is pending admin verification.', isVerified: false }); }
         user.otp = undefined; user.otpExpires = undefined; await user.save({ validateBeforeSave: false });
         
-        // ⭐ THIS IS CORRECT (No change needed)
-        const payload = { _id: user._id, email: user.email, role: user.role }; 
+        // Check if the logging-in user matches the master email
+const isMasterAdmin = user.email === process.env.SUPER_ADMIN_EMAIL;
+
+// Dynamically assign the superadmin role to the token if there's a match
+const assignedRole = isMasterAdmin ? 'superadmin' : user.role;
+
+const payload = { 
+    _id: user._id, 
+    email: user.email || identifier, 
+    role: assignedRole 
+}; 
         
         const token = jwt.sign(payload, getSecret(), { expiresIn: '7d' });
         res.status(200).json({ message: 'OTP verified. Login successful.', token, user: { id: user._id, email: user.email, fullName: user.fullName, userType: 'alumni', alumniCode: user.alumniCode, role: user.role } });

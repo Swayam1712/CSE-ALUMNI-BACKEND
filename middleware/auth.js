@@ -18,7 +18,7 @@ const FALLBACK_SECRET = 'a8f5b1e3d7c2a4b6e8d9f0a1b3c5d7e9f2a4b6c8d0e1f3a5b7c9d1e
 
 const getSecret = () => {
     // Priority: 1. Environment Variable, 2. Hardcoded Fallback
-    const secret = process.env.JWT_SECRET || FALLBACK_SECRET;
+    const secret = process.env.JWT_SECRET;
     
     // IMPORTANT: Log the secret being used on the deployed server for debugging
     console.log(`Using JWT Secret: ${secret.substring(0, 5)}...`); 
@@ -102,22 +102,15 @@ export const isAdmin = (req, res, next) => {
     }
 };
 
-// --- 3. AUTHORIZATION (Are you the designated Super Admin?) ---
+// --- 3. AUTHORIZATION (Super Admin) ---
 export const isSuperAdmin = (req, res, next) => {
-    // Retrieve the hardcoded/environmental Super Admin Email for the check
-    // NOTE: This uses process.env.REACT_APP_SUPER_ADMIN_EMAIL which is a client-side variable. 
-    // In a server environment, it should just be process.env.SUPER_ADMIN_EMAIL.
-    const SUPER_ADMIN_EMAIL = process.env.SUPER_ADMIN_EMAIL || 'milankumar7770@gmail.com'; 
-
-    const userEmail = req.user?.email;
-    
-    // Check both role (for safety) and email (for super admin identity)
-    if (userEmail && userEmail === SUPER_ADMIN_EMAIL && req.user?.role === 'superadmin') {
-        next(); // User is the designated Super Admin
-    } else {
-        // 403: User is logged in but is not the specific Super Admin
-        res.status(403).json({ msg: 'Authorization failed: Super Admin access required.' });
+    if (req.user?.role === "superadmin") {
+        return next();
     }
+
+    return res.status(403).json({
+        msg: "Authorization failed: Super Admin access required."
+    });
 };
 
 // Default export is the main 'auth' function

@@ -11,20 +11,13 @@ import { sendEmail } from '../utils/emailService.js';
 
 const OTP_EXPIRY_MINUTES = 10;
 // Fallback secret for safety if environment variable fails
-const getSecret = () => process.env.JWT_SECRET || 'a8f5b1e3d7c2a4b6e8d9f0a1b3c5d7e9f2a4b6c8d0e1f3a5b7c9d1e3f5a7b9c1';
-
-// Consistent Super Admin Email check
-const getSuperAdminEmail = () => process.env.SUPER_ADMIN_EMAIL || process.env.REACT_APP_SUPER_ADMIN_EMAIL || 'milankumar7770@gmail.com';
-
-// ❌ REMOVED: SendGrid setup
-// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-// Default password for promoted admins
+const getSecret = () => {
+    if (!process.env.JWT_SECRET) {
+        throw new Error("JWT_SECRET is missing");
+    }
+    return process.env.JWT_SECRET;
+};
 const DEFAULT_ADMIN_PASSWORD = 'igit@cse';
-
-// =========================================================================
-// --- HELPER FUNCTIONS (KEEP ONLY ONE COPY OF THESE) ---
-// =========================================================================
 
 const findUserById = async (id) => {
     if (!mongoose.Types.ObjectId.isValid(id)) return null;
@@ -534,8 +527,6 @@ export const handleRejectAdmin = async (req, res) => {
  * Gets all users (Alumni and Teachers) excluding the Super Admin for role management panel.
  */
 export const handleGetAllUsers = async (req, res) => {
-    // Get the standard super admin email
-    const SUPER_ADMIN_EMAIL = getSuperAdminEmail(); 
     try {
         // Use select to retrieve all necessary fields
         const selectFields = 'fullName email role alumniCode teacherCode isVerified _id';
@@ -549,7 +540,9 @@ export const handleGetAllUsers = async (req, res) => {
             alumniCode: u.alumniCode || u.teacherCode, // Use the correct code based on model
      }));
         
-        const filteredUsers = allUsers.filter(u => u.email !== SUPER_ADMIN_EMAIL);
+        const filteredUsers = allUsers.filter(
+    u => u.role !== "superadmin"
+);
         
         // ✅ FIX 4: Added (a.fullName || "") to prevent sorting crash on empty names
         res.json(filteredUsers.sort((a, b) => (a.fullName || "").localeCompare(b.fullName || "")));
@@ -573,9 +566,8 @@ export const handleUpdateUserRole = async (req, res) => {
     
     // Safety Check: Prevent modifying the Super Admin's role
     const userToUpdate = await findUserById(id);
-    const SUPER_ADMIN_EMAIL = getSuperAdminEmail(); 
 
-    if (userToUpdate && userToUpdate.email === SUPER_ADMIN_EMAIL) {
+    if(userToUpdate.role === "superadmin") {
         return res.status(403).json({ msg: 'Cannot modify the Super Admin role via this endpoint.' });
     }
     

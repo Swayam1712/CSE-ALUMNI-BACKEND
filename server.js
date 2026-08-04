@@ -1,4 +1,5 @@
 import express from 'express';
+import morgan from 'morgan';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -69,6 +70,8 @@ const razorpay = new Razorpay({
 
 // --- Express & CORS Setup ---
 const app = express();
+app.set('trust proxy', true); 
+app.use(morgan(':method :url :status - :response-time ms - IP: :remote-addr'));
 const PORT = process.env.PORT || 5000;
 const ALLOWED_ORIGINS = [
   'http://localhost:3000',

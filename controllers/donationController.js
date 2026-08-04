@@ -1,5 +1,6 @@
 import Donation from '../models/Donation.js';
 import Razorpay from 'razorpay';
+import crypto from 'crypto';
 import mongoose from 'mongoose'; 
 
 // 🚀 --- ADD THESE IMPORTS --- 🚀
@@ -44,14 +45,30 @@ export const saveDonation = async (req, res) => {
     // 1. Get User ID from the token (provided by the 'protect' middleware)
     const userId = req.user._id; 
     
-    // 2. Convert the userId to a valid Mongoose ObjectId for database operations
+    // 2. Convert the userId to a valid Mongoose ObjectId
     let userObjectId = null;
     if (userId && mongoose.Types.ObjectId.isValid(userId)) {
         userObjectId = new mongoose.Types.ObjectId(userId);
     }
     
     if (!userObjectId) {
-        return res.status(401).json({ message: 'User not authenticated or ID invalid for donation record.' });
+        return res.status(401).json({ message: 'User not authenticated or ID invalid.' });
+    }
+
+    // 🚀 --- NEW: RAZORPAY SIGNATURE VERIFICATION --- 🚀
+    if (!razorpayOrderId || !razorpayPaymentId || !razorpaySignature) {
+        return res.status(400).json({ message: 'Missing required Razorpay payment details.' });
+    }
+
+    const body = razorpayOrderId + "|" + razorpayPaymentId;
+    const expectedSignature = crypto
+        .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+        .update(body.toString())
+        .digest('hex');
+
+    if (expectedSignature !== razorpaySignature) {
+        console.error(`🚨 ALERT: Invalid payment signature detected for user ${userId}`);
+        return res.status(400).json({ message: 'Payment verification failed: Invalid signature.' });
     }
 
     try {

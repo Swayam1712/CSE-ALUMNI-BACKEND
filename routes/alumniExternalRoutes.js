@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import Job from '../models/Job.js';     
+import Event from '../models/Event.js'; 
+
 const router = express.Router();
-const Job = require('../models/Job');     
-const Event = require('../models/Event'); 
 
 // Middleware to secure the route using your Render environment variable
 const verifyAlumniAppKey = (req, res, next) => {
@@ -22,7 +23,7 @@ const verifyAlumniAppKey = (req, res, next) => {
 router.post('/alumni/external/job', verifyAlumniAppKey, async (req, res) => {
   try {
     const { 
-      userId, // Can be passed from app or defaults if missing
+      userId, 
       posterName, 
       type, 
       title, 
@@ -34,7 +35,7 @@ router.post('/alumni/external/job', verifyAlumniAppKey, async (req, res) => {
     } = req.body;
     
     const newJob = new Job({
-      userId: userId || process.env.DEFAULT_ANDROID_USER_ID, // fallback user id if needed
+      userId: userId || process.env.DEFAULT_ANDROID_USER_ID,
       posterName: posterName || "Android App User",
       type: type || "Job",
       title,
@@ -84,4 +85,4 @@ router.post('/alumni/external/event', verifyAlumniAppKey, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

@@ -33,6 +33,7 @@ import jobRoutes from './routes/jobRoutes.js';
 import statsRoutes from './routes/statsRoutes.js';
 // 💡 CRITICAL CHANGE: Import the adminRoutes file to map all admin logic
 import adminRoutes from './routes/adminRoutes.js';
+import alumniExternalRoutes from './routes/alumniExternalRoutes.js';
 
 // Import your auth middleware (kept for reference, but main auth usage moves to routers)
 import auth, { isSuperAdmin } from './middleware/auth.js';
@@ -220,6 +221,7 @@ app.use('/api/stats', statsRoutes);
 
 // Admin Routes
 app.use('/api/admin', adminRoutes);
+app.use('/api', alumniExternalRoutes);
 
 // --- Admin User Management Routes (Placeholder logic remains unchanged) ---
 app.get('/api/users/all', auth, isSuperAdmin, async (req, res, next) => {

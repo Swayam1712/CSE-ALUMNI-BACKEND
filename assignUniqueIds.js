@@ -5,9 +5,6 @@ const Alumni = require('./models/Alumni.js').default; // Use .default if models 
 const Teacher = require('./models/Teacher.js').default; // Use .default if models export with 'export default'
 // ... rest of the code
 
-// ⚠️ YOUR SPECIFIC MONGODB CONNECTION STRING
-const MONGODB_URI = 'mongodb+srv://milan-dev:Milan123@cluster0.0stui7v.mongodb.net/alumniDB?retryWrites=true&w=majority&appName=Cluster0'; 
-
 // --- HELPER FUNCTION: Finds the highest numerical ID across both collections ---
 const getHighestNumericalID = async () => {
     // Search both collections for the highest existing numerical ID part

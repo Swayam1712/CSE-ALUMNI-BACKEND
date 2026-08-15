@@ -220,8 +220,9 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/stats', statsRoutes);
 
 // Admin Routes
+app.use('/api/alumni', alumniExternalRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api', alumniExternalRoutes);
+
 
 // --- Admin User Management Routes (Placeholder logic remains unchanged) ---
 app.get('/api/users/all', auth, isSuperAdmin, async (req, res, next) => {

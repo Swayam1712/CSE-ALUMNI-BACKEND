@@ -4,14 +4,13 @@ import Event from '../models/Event.js';
 
 const router = express.Router();
 
-// Middleware to secure the route using your Render environment variable
 const verifyAlumniAppKey = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   if (!authHeader) {
     return res.status(401).json({ error: "Access denied. No token provided." });
   }
 
-  const token = authHeader.split(' ')[1]; // Expecting "Bearer <TOKEN>"
+  const token = authHeader.split(' ')[1]; 
   if (token === process.env.ALUMNI_ANDROID_SECRET) {
     next(); 
   } else {
@@ -19,8 +18,8 @@ const verifyAlumniAppKey = (req, res, next) => {
   }
 };
 
-// 1. Endpoint for Jobs (Matches your exact Job schema)
-router.post('/alumni/external/job', verifyAlumniAppKey, async (req, res) => {
+// Changed from '/alumni/external/job' to '/external/job'
+router.post('/external/job', verifyAlumniAppKey, async (req, res) => {
   try {
     const { 
       userId, 
@@ -53,8 +52,8 @@ router.post('/alumni/external/job', verifyAlumniAppKey, async (req, res) => {
   }
 });
 
-// 2. Endpoint for Events (Matches your exact Event schema)
-router.post('/alumni/external/event', verifyAlumniAppKey, async (req, res) => {
+// Changed from '/alumni/external/event' to '/external/event'
+router.post('/external/event', verifyAlumniAppKey, async (req, res) => {
   try {
     const { 
       title, 

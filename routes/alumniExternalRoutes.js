@@ -18,8 +18,8 @@ const verifyAlumniAppKey = (req, res, next) => {
   }
 };
 
-// NOTICE: Just '/external/job' (because server.js already adds '/api/alumni')
-router.post('/external/job', verifyAlumniAppKey, async (req, res) => {
+// Explicit full path
+router.post('/alumni/external/job', verifyAlumniAppKey, async (req, res) => {
   try {
     const { 
       userId, 
@@ -52,8 +52,7 @@ router.post('/external/job', verifyAlumniAppKey, async (req, res) => {
   }
 });
 
-// NOTICE: Just '/external/event'
-router.post('/external/event', verifyAlumniAppKey, async (req, res) => {
+router.post('/alumni/external/event', verifyAlumniAppKey, async (req, res) => {
   try {
     const { 
       title, 

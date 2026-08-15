@@ -220,7 +220,7 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/stats', statsRoutes);
 
 // Admin Routes
-app.use('/api/alumni', alumniExternalRoutes);
+app.use('/api', alumniExternalRoutes);
 app.use('/api/admin', adminRoutes);
 
 

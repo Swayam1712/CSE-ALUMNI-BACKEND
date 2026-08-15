@@ -203,7 +203,7 @@ console.log('JWT Secret is loaded.');
 // =========================================================================
 // 💡 API ROUTING - MAPPING ALL ROUTE FILES (Existing Routes)
 // =========================================================================
-
+app.use('/api/external', alumniExternalRoutes);
 // General Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
@@ -220,7 +220,7 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/stats', statsRoutes);
 
 // Admin Routes
-app.use('/api', alumniExternalRoutes);
+
 app.use('/api/admin', adminRoutes);
 
 

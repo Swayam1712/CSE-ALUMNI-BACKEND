@@ -18,7 +18,7 @@ const verifyAlumniAppKey = (req, res, next) => {
   }
 };
 
-// Changed from '/alumni/external/job' to '/external/job'
+// NOTICE: Just '/external/job' (because server.js already adds '/api/alumni')
 router.post('/external/job', verifyAlumniAppKey, async (req, res) => {
   try {
     const { 
@@ -52,7 +52,7 @@ router.post('/external/job', verifyAlumniAppKey, async (req, res) => {
   }
 });
 
-// Changed from '/alumni/external/event' to '/external/event'
+// NOTICE: Just '/external/event'
 router.post('/external/event', verifyAlumniAppKey, async (req, res) => {
   try {
     const { 

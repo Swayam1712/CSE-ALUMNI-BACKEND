@@ -34,7 +34,7 @@ router.post('/external/job', verifyAlumniAppKey, async (req, res) => {
     } = req.body;
     
     const newJob = new Job({
-      userId: userId || process.env.DEFAULT_ANDROID_USER_ID,
+      userId: userId || process.env.DEFAULT_ANDROID_USER_ID || "65a12b3c4d5e6f7a8b9c0d1e",
       posterName: posterName || "Android App User",
       type: type || "Job",
       title,

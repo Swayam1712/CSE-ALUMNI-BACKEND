@@ -83,4 +83,24 @@ router.post('/external/event', verifyAlumniAppKey, async (req, res) => {
   }
 });
 
+// GET all jobs for the Android app
+router.get('/external/jobs', verifyAlumniAppKey, async (req, res) => {
+  try {
+    const jobs = await Job.find().sort({ createdAt: -1 });
+    res.status(200).json({ success: true, data: jobs });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// GET all events for the Android app
+router.get('/external/events', verifyAlumniAppKey, async (req, res) => {
+  try {
+    const events = await Event.find().sort({ createdAt: -1 });
+    res.status(200).json({ success: true, data: events });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 export default router;

@@ -83,7 +83,6 @@ router.post('/external/event', verifyAlumniAppKey, async (req, res) => {
   }
 });
 
-// GET all jobs for the Android app
 router.get('/external/job', verifyAlumniAppKey, async (req, res) => {
   try {
     const jobs = await Job.find().sort({ createdAt: -1 });
@@ -93,11 +92,50 @@ router.get('/external/job', verifyAlumniAppKey, async (req, res) => {
   }
 });
 
-// GET all events for the Android app
 router.get('/external/event', verifyAlumniAppKey, async (req, res) => {
   try {
     const events = await Event.find().sort({ createdAt: -1 });
     res.status(200).json({ success: true, data: events });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+router.put('/external/job/:id', verifyAlumniAppKey, async (req, res) => {
+  try {
+    const updatedJob = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    if (!updatedJob) return res.status(404).json({ success: false, error: "Job not found" });
+    res.status(200).json({ success: true, message: "Job successfully updated!", data: updatedJob });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+router.delete('/external/job/:id', verifyAlumniAppKey, async (req, res) => {
+  try {
+    const deletedJob = await Job.findByIdAndDelete(req.params.id);
+    if (!deletedJob) return res.status(404).json({ success: false, error: "Job not found" });
+    res.status(200).json({ success: true, message: "Job successfully deleted!" });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+router.put('/external/event/:id', verifyAlumniAppKey, async (req, res) => {
+  try {
+    const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    if (!updatedEvent) return res.status(404).json({ success: false, error: "Event not found" });
+    res.status(200).json({ success: true, message: "Event successfully updated!", data: updatedEvent });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+router.delete('/external/event/:id', verifyAlumniAppKey, async (req, res) => {
+  try {
+    const deletedEvent = await Event.findByIdAndDelete(req.params.id);
+    if (!deletedEvent) return res.status(404).json({ success: false, error: "Event not found" });
+    res.status(200).json({ success: true, message: "Event successfully deleted!" });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

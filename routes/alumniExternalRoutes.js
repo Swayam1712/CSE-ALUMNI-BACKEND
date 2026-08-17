@@ -84,7 +84,7 @@ router.post('/external/event', verifyAlumniAppKey, async (req, res) => {
 });
 
 // GET all jobs for the Android app
-router.get('/external/jobs', verifyAlumniAppKey, async (req, res) => {
+router.get('/external/job', verifyAlumniAppKey, async (req, res) => {
   try {
     const jobs = await Job.find().sort({ createdAt: -1 });
     res.status(200).json({ success: true, data: jobs });
@@ -94,7 +94,7 @@ router.get('/external/jobs', verifyAlumniAppKey, async (req, res) => {
 });
 
 // GET all events for the Android app
-router.get('/external/events', verifyAlumniAppKey, async (req, res) => {
+router.get('/external/event', verifyAlumniAppKey, async (req, res) => {
   try {
     const events = await Event.find().sort({ createdAt: -1 });
     res.status(200).json({ success: true, data: events });
